@@ -12,9 +12,11 @@ public class Activite {
     private int nombresLikes; // Nombre de "likes" reçus par l'activité
     List<Utilisateur> interesses; // Liste des utilisateurs intéressés par l'activité
     List<Utilisateur> likes; // Liste des utilisateurs ayant aimé l'activité
+    String ville; // Ville où l'activité a lieu
+    double prix; // Prix de l'activité
     
-    // Constructeur avec l'ID, titre, description, image, catégorie, et auteur
-    public Activite(int id, String titre, String description, String image, String categorie, Utilisateur auteur) {
+    // Constructeur avec l'ID, titre, description, image, catégorie, auteur, ville et prix
+    public Activite(int id, String titre, String description, String image, String categorie, Utilisateur auteur, String ville, double prix) {
         super();
         this.id = id; // Initialisation de l'ID
         this.titre = titre; // Initialisation du titre
@@ -25,10 +27,12 @@ public class Activite {
         this.nombresLikes = 0; // Initialisation du nombre de likes à 0
         this.interesses = new ArrayList<>(); // Initialisation de la liste des utilisateurs intéressés
         this.likes = new ArrayList<>(); // Initialisation de la liste des utilisateurs ayant aimé
+        this.ville = ville; // Initialisation de la ville
+        this.prix = prix; // Initialisation du prix
     }
 
-    // Constructeur sans l'ID, mais avec les autres attributs
-    public Activite(String titre, String description, String image, String categorie, Utilisateur auteur) {
+    // Constructeur sans l'ID, mais avec les autres attributs, y compris ville et prix
+    public Activite(String titre, String description, String image, String categorie, Utilisateur auteur, String ville, double prix) {
         super();
         this.titre = titre;
         this.description = description;
@@ -38,6 +42,28 @@ public class Activite {
         this.nombresLikes = 0; // Initialisation du nombre de likes à 0
         this.interesses = new ArrayList<>(); // Initialisation de la liste des utilisateurs intéressés
         this.likes = new ArrayList<>(); // Initialisation de la liste des utilisateurs ayant aimé
+        this.ville = ville; // Initialisation de la ville
+        this.prix = prix; // Initialisation du prix
+    }
+
+    // Getter pour la ville
+    public String getVille() {
+        return ville;
+    }
+
+    // Setter pour la ville
+    public void setVille(String ville) {
+        this.ville = ville;
+    }
+
+    // Getter pour le prix
+    public double getPrix() {
+        return prix;
+    }
+
+    // Setter pour le prix
+    public void setPrix(double prix) {
+        this.prix = prix;
     }
 
     // Getter pour l'ID
@@ -139,7 +165,7 @@ public class Activite {
         }
     }
     
- // Méthode pour retirer un utilisateur de la liste des intéressés
+    // Méthode pour retirer un utilisateur de la liste des intéressés
     public void retirerInteresses(Utilisateur U) {
         if (this.interesses.contains(U)) { // Vérifie si l'utilisateur est dans la liste des intéressés
             this.interesses.remove(U); // Retire l'utilisateur de la liste des intéressés
