@@ -10,11 +10,13 @@ public class Main {
     private Utilisateur utilisateur;
     private GestionnaireActivites gestionnaire;
     private JPanel activityPanel;
-
+    private boolean isConnected = false;
+    
     public Main() {
         // Initialiser l'utilisateur, le gestionnaire et le panel
         utilisateur = new Utilisateur(1, "JohnDoe", "john@example.com", "password123", "Bio de John", "photo.jpg");
         gestionnaire = new GestionnaireActivites();
+        gestionnaire.chargerActivitesDepuisBD();
         activityPanel = new JPanel();
     }
 
@@ -36,7 +38,11 @@ public class Main {
         JButton connexionBtn = new JButton("Connexion");
         styleButton(activitesBtn);
         styleButton(connexionBtn);
-
+        connexionBtn.addActionListener(e -> {
+            if (!isConnected) {
+            	new ConnexionFenetre(gestionnaire);
+            }
+        });
         navPanel.add(activitesBtn);
         navPanel.add(connexionBtn);
 
@@ -52,19 +58,23 @@ public class Main {
         scrollPane.setBorder(null);
 
         // Ajouter des activités d'exemple
-        for (int i = 1; i <= 3; i++) {
-            Activite activite = new Activite(i, "Activité " + i, "En savoir plus", "image.jpg", "Catégorie " + i, utilisateur, "Ville " + i, i * 10);
-            gestionnaire.ajouterActivite(activite);
+        for (Activite activite : gestionnaire.getActivites()) {
             ajouterActiviteUI(activite, activityPanel);
         }
-
+        
         // Add Activity Button
         JButton addButton = new JButton("Ajouter une activité");
         styleButton(addButton);
         addButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        addButton.setEnabled(isConnected);  // Le bouton est désactivé tant que l'utilisateur n'est pas connecté
         addButton.addActionListener(e -> {
-            new FormulaireAjoutActiviteDialog(frame, this, utilisateur, gestionnaire, activityPanel); // Passer l'instance de Main et autres données
+            if (isConnected) {
+                new FormulaireAjoutActiviteDialog(frame, this, utilisateur, gestionnaire, activityPanel); 
+            } else {
+                JOptionPane.showMessageDialog(frame, "Veuillez vous connecter pour ajouter une activité.");
+            }
         });
+        
 
         // Main Panel
         JPanel mainPanel = new JPanel(new BorderLayout());
@@ -140,9 +150,12 @@ public class Main {
         activityPanel.add(panel);
         activityPanel.revalidate();
         activityPanel.repaint();
+        
+        
     }
 
 
+    
     private void afficherDetailsActivite(Activite activite, GestionnaireActivites gestionnaire) {
         JDialog dialog = new JDialog(frame, "Détails de l'activité", true);
         dialog.setSize(600, 400);
@@ -190,7 +203,7 @@ public class Main {
         });
 
         deleteButton.addActionListener(e -> {
-            gestionnaire.supprimerActivite(activite);
+            gestionnaire.supprimeActivite(activite.getId());
             dialog.dispose();
             updateActivityPanel();
         });
